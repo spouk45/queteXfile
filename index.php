@@ -35,9 +35,17 @@ if (!empty($_GET['open']) && !isset($_POST['editFile'])){
 if (!empty($_GET['delete']) && $_GET['delete'] != '..') {
     if (is_dir($dirToDelete = $root . $_GET['delete'])) {
         $files = scandir($dirToDelete);
+
         foreach ($files as $file) {
             if (file_exists($fileToDelete = $root .$_GET['delete'].'/'. $file) && $file != '..' && $file != '.') {
-                unlink($fileToDelete);
+                if(is_dir($fileToDelete)){
+                    echo 'Impossible de supprimer ce répertoire: d\'autres répertoires existent dans celui -ci.';
+                    echo '<br><a href="/">Retour</a>';
+                    exit();
+                }
+                else{
+                    unlink($fileToDelete);
+                }
             }
         }
         rmdir($dirToDelete);
